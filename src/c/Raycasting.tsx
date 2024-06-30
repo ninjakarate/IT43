@@ -4,6 +4,7 @@ const Raycasting: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null); // Референс на canvas элемент
   const [width, setWidth] = useState(window.innerWidth); // Состояние для ширины окна
   const [height, setHeight] = useState(window.innerHeight); // Состояние для высоты окна
+  const keys = useRef<{ [key: string]: boolean }>({}); // Состояние для отслеживания нажатых клавиш
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -31,8 +32,26 @@ const Raycasting: React.FC = () => {
       y: 3.5,
       dir: 0,
       fov: Math.PI / 3,
-      moveSpeed: 0.1,
-      rotSpeed: 0.05
+      moveSpeed: 0.05,
+      rotSpeed: 0.03
+    };
+
+    // Функция обработки движения игрока
+    const movePlayer = () => {
+      if (keys.current['ArrowUp']) {
+        player.x += Math.cos(player.dir) * player.moveSpeed;
+        player.y += Math.sin(player.dir) * player.moveSpeed;
+      }
+      if (keys.current['ArrowDown']) {
+        player.x -= Math.cos(player.dir) * player.moveSpeed;
+        player.y -= Math.sin(player.dir) * player.moveSpeed;
+      }
+      if (keys.current['ArrowLeft']) {
+        player.dir += player.rotSpeed;
+      }
+      if (keys.current['ArrowRight']) {
+        player.dir -= player.rotSpeed;
+      }
     };
 
     // Функция отрисовки кадра
@@ -40,6 +59,8 @@ const Raycasting: React.FC = () => {
       if (!canvas || !context) {
         return;
       }
+
+      movePlayer(); // Обновление позиции игрока перед отрисовкой
 
       context.clearRect(0, 0, width, height); // Очистка canvas
 
@@ -133,24 +154,17 @@ const Raycasting: React.FC = () => {
 
     // Обработка нажатий клавиш
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowUp') {
-        player.x += Math.cos(player.dir) * player.moveSpeed;
-        player.y += Math.sin(player.dir) * player.moveSpeed;
-      }
-      if (e.key === 'ArrowDown') {
-        player.x -= Math.cos(player.dir) * player.moveSpeed;
-        player.y -= Math.sin(player.dir) * player.moveSpeed;
-      }
-      if (e.key === 'ArrowLeft') {
-        player.dir += player.rotSpeed;
-      }
-      if (e.key === 'ArrowRight') {
-        player.dir -= player.rotSpeed;
-      }
+      keys.current[e.key] = true;
+    };
+
+    // Обработка отпускания клавиш
+    const handleKeyUp = (e: KeyboardEvent) => {
+      keys.current[e.key] = false;
     };
 
     window.addEventListener('resize', handleResize);
     window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
     handleResize();
 
     // Запуск отрисовки
@@ -160,6 +174,7 @@ const Raycasting: React.FC = () => {
     return () => {
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
     };
   }, [width, height]);
 
