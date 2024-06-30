@@ -1,4 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
+import KeyboardLayout from './KeyboardLayout';
+import { KeyTypeEnum } from '../utils/types';
 
 const Raycasting: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null); // Референс на canvas элемент
@@ -6,6 +8,9 @@ const Raycasting: React.FC = () => {
   const [height, setHeight] = useState(window.innerHeight); // Состояние для высоты окна
   const keys = useRef<{ [key: string]: boolean }>({}); // Состояние для отслеживания нажатых клавиш
 
+  // Необходимо для отслеживания нажатых клавиш
+  const [_, setPressedKeys] = useState<{ [key: string]: boolean }>({});
+  
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas?.getContext('2d'); // Получение 2D контекста для рисования на canvas
@@ -17,27 +22,27 @@ const Raycasting: React.FC = () => {
     // Карта уровня, 1 - это стена, 0 - пустое пространство
     const map = [
       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-      [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-      [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-      [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-      [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-      [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-      [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-      [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-      [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-      [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-      [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-      [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-      [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+      [1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1],
+      [1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1],
+      [1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1],
+      [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
+      [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
+      [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
+      [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
+      [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
+      [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
+      [1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1],
+      [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+      [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
       [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     ];
 
     // Параметры игрока: позиция, направление, поле зрения, скорости перемещения и поворота
     const player = {
-      x: 3.5,
-      y: 3.5,
+      x: 1.5,
+      y: 1.5,
       dir: 0,
-      fov: Math.PI / 3,
+      // fov: Math.PI / 3,
       moveSpeed: 0.05,
       rotSpeed: 0.03
     };
@@ -48,15 +53,22 @@ const Raycasting: React.FC = () => {
       let newY = player.y;
 
       // Вычисляем новые координаты игрока
-      if (keys.current['ArrowUp']) {
+      if (keys.current[KeyTypeEnum.forward]) {
         newX += Math.cos(player.dir) * player.moveSpeed;
         newY += Math.sin(player.dir) * player.moveSpeed;
       }
-      if (keys.current['ArrowDown']) {
+      if (keys.current[KeyTypeEnum.backward]) {
         newX -= Math.cos(player.dir) * player.moveSpeed;
         newY -= Math.sin(player.dir) * player.moveSpeed;
       }
-
+      if (keys.current[KeyTypeEnum.sideLeft]) {
+        newX += Math.cos(player.dir + Math.PI / 2) * player.moveSpeed;
+        newY += Math.sin(player.dir + Math.PI / 2) * player.moveSpeed;
+      }
+      if (keys.current[KeyTypeEnum.sideRight]) {
+        newX += Math.cos(player.dir - Math.PI / 2) * player.moveSpeed;
+        newY += Math.sin(player.dir - Math.PI / 2) * player.moveSpeed;
+      }
       // Проверяем наличие стены в новой позиции игрока
       const mapX = Math.floor(newX);
       const mapY = Math.floor(newY);
@@ -67,10 +79,10 @@ const Raycasting: React.FC = () => {
       }
 
       // Обрабатываем повороты без проверки столкновений
-      if (keys.current['ArrowLeft']) {
+      if (keys.current[KeyTypeEnum.left]) {
         player.dir += player.rotSpeed;
       }
-      if (keys.current['ArrowRight']) {
+      if (keys.current[KeyTypeEnum.right]) {
         player.dir -= player.rotSpeed;
       }
     };
@@ -185,11 +197,13 @@ const Raycasting: React.FC = () => {
     // Обработка нажатий клавиш
     const handleKeyDown = (e: KeyboardEvent) => {
       keys.current[e.key] = true;
+      setPressedKeys({ ...keys.current });
     };
 
     // Обработка отпускания клавиш
     const handleKeyUp = (e: KeyboardEvent) => {
       keys.current[e.key] = false;
+      setPressedKeys({ ...keys.current });
     };
 
     window.addEventListener('resize', handleResize);
@@ -208,7 +222,10 @@ const Raycasting: React.FC = () => {
     };
   }, [width, height]);
 
-  return <canvas ref={canvasRef} />;
+  return <>
+    <canvas ref={canvasRef} />
+    <KeyboardLayout keys={keys} />
+  </>;
 };
 
 export default Raycasting;

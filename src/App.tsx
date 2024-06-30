@@ -1,5 +1,5 @@
-import { Stack, Typography } from '@mui/material';
-import Raycastin from './c/Raycasting';
+import { Stack } from '@mui/material';
+import Raycasting from './c/Raycasting';
 
 function App() {
 
@@ -12,24 +12,7 @@ function App() {
       justifyContent={'center'}
       spacing={2}
     >
-      <Stack
-        position={'absolute'}
-        width={'300px'}
-        height={'150px'}
-        bgcolor={'lightgrey'}
-        borderRadius={2}
-        boxShadow={3}
-        alignItems={'center'}
-        justifyContent={'center'}
-        zIndex={1000}
-        top={'80%'}
-        left={'3%'}
-      >
-        <Typography fontFamily={'Orbitron'} letterSpacing={2}>
-          welcome ?
-        </Typography>
-      </Stack>
-      <Raycastin />
+      <Raycasting />
     </Stack>
   )
 }
