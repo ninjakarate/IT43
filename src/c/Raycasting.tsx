@@ -16,14 +16,20 @@ const Raycasting: React.FC = () => {
 
     // Карта уровня, 1 - это стена, 0 - пустое пространство
     const map = [
-      [1, 1, 1, 1, 1, 1, 1, 1],
-      [1, 0, 0, 0, 0, 0, 0, 1],
-      [1, 0, 0, 0, 0, 0, 0, 1],
-      [1, 0, 0, 0, 0, 0, 0, 1],
-      [1, 0, 0, 0, 0, 0, 0, 1],
-      [1, 0, 0, 0, 0, 0, 0, 1],
-      [1, 0, 0, 0, 0, 0, 0, 1],
-      [1, 1, 1, 1, 1, 1, 1, 1]
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+      [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+      [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+      [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+      [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+      [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+      [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+      [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+      [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+      [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+      [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+      [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     ];
 
     // Параметры игрока: позиция, направление, поле зрения, скорости перемещения и поворота
@@ -38,14 +44,29 @@ const Raycasting: React.FC = () => {
 
     // Функция обработки движения игрока
     const movePlayer = () => {
+      let newX = player.x;
+      let newY = player.y;
+
+      // Вычисляем новые координаты игрока
       if (keys.current['ArrowUp']) {
-        player.x += Math.cos(player.dir) * player.moveSpeed;
-        player.y += Math.sin(player.dir) * player.moveSpeed;
+        newX += Math.cos(player.dir) * player.moveSpeed;
+        newY += Math.sin(player.dir) * player.moveSpeed;
       }
       if (keys.current['ArrowDown']) {
-        player.x -= Math.cos(player.dir) * player.moveSpeed;
-        player.y -= Math.sin(player.dir) * player.moveSpeed;
+        newX -= Math.cos(player.dir) * player.moveSpeed;
+        newY -= Math.sin(player.dir) * player.moveSpeed;
       }
+
+      // Проверяем наличие стены в новой позиции игрока
+      const mapX = Math.floor(newX);
+      const mapY = Math.floor(newY);
+
+      if (map[mapX][mapY] === 0) {
+        player.x = newX;
+        player.y = newY;
+      }
+
+      // Обрабатываем повороты без проверки столкновений
       if (keys.current['ArrowLeft']) {
         player.dir += player.rotSpeed;
       }
@@ -53,6 +74,7 @@ const Raycasting: React.FC = () => {
         player.dir -= player.rotSpeed;
       }
     };
+
 
     // Функция отрисовки кадра
     const draw = () => {
@@ -131,11 +153,19 @@ const Raycasting: React.FC = () => {
         const drawEnd = Math.min(lineHeight / 2 + height / 2, height);
 
         // Определяем цвет стены в зависимости от стороны
-        context.strokeStyle = side === 0 ? '#FFFFFF' : '#AAAAAA';
+        context.strokeStyle = side === 0 ? '#b85d56' : '#d16b62';
         context.beginPath();
         context.moveTo(x, drawStart);
         context.lineTo(x, drawEnd);
         context.stroke();
+
+        // Добавляем цвет "потолка"
+        context.fillStyle = 'lightblue';
+        context.fillRect(x, 0, 1, drawStart);
+
+        // Добавляем цвет "пола"
+        context.fillStyle = '#9bbf9d';
+        context.fillRect(x, drawEnd, 1, height - drawEnd);
       }
 
       // Запрос следующего кадра
