@@ -1,4 +1,5 @@
 import { Stack, Typography } from '@mui/material';
+import Raycastin from './c/Raycasting';
 
 function App() {
 
@@ -11,9 +12,10 @@ function App() {
       justifyContent={'center'}
       spacing={2}
     >
-      <Typography fontFamily={'Orbitron'} letterSpacing={2}>
+      {/* <Typography fontFamily={'Orbitron'} letterSpacing={2}>
         welcome ?
-      </Typography>
+      </Typography> */}
+      <Raycastin />
     </Stack>
   )
 }
