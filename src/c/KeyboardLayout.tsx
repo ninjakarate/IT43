@@ -1,5 +1,6 @@
 import { Stack, Typography } from "@mui/material";
 import { KeyTypeEnum } from "../utils/types";
+import React from "react";
 
 export default function KeyboardLayout({ keys }: {
     keys: React.MutableRefObject<{ [key: string]: boolean }>
