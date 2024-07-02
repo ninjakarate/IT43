@@ -181,8 +181,11 @@ const Raycasting: React.FC = () => {
         const drawStart = Math.max(-lineHeight / 2 + height / 2, 0);
         const drawEnd = Math.min(lineHeight / 2 + height / 2, height);
 
-        // Определяем цвет стены в зависимости от стороны
-        context.strokeStyle = side === 0 ? '#b85d56' : '#d16b62';
+        const colorOffset = 100;
+        // Определяем цвет стены в зависимости дальности от игрока
+        let color = 255 - Math.min(255, perpWallDist * 25) - colorOffset;
+        context.strokeStyle = side === 0 ? `rgb(${color + colorOffset}, ${color}, ${color})` : `rgb(${color - 20 + colorOffset}, ${color - 20}, ${color - 20})`;
+        
         context.beginPath();
         context.moveTo(x, drawStart);
         context.lineTo(x, drawEnd);
