@@ -15,7 +15,7 @@ import ghost from "../assets/tex/ghost.png";
 export const tiles: Tiles = {
     1: {
         type: "wall",
-        src: emblem,
+        src: brick,
         collision: true,
     },
     2: {
@@ -60,7 +60,7 @@ export const tiles: Tiles = {
     },
     10: {
         type: "wall",
-        src: brick,
+        src: emblem,
         collision: true,
     },
     11: {
