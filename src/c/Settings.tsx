@@ -24,22 +24,25 @@ export default function Settings({
                 <Typography variant={'h4'} fontFamily={'Orbitron'} letterSpacing={2}>
                     Settings
                 </Typography>
-                <Button onClick={onConfirm}>Confirm</Button>
-                <FormControlLabel label={'Shades'} control={<Checkbox
-                    checked={settings.isShading}
-                    onChange={() => setSettings((prev) => ({ ...prev, isShading: !prev.isShading }))}
-                />} />
-                <FormControlLabel label={'Wiggling'} control={<Checkbox
-                    checked={settings.isWiggling}
-                    title='wiggling'
-                    onChange={() => setSettings((prev) => ({ ...prev, isWiggling: !prev.isWiggling }))}
-                />} />
-                <FormControlLabel label={'Fps counter'} control={<Checkbox
-                    checked={settings.isShowFps}
-                    title='fps'
-                    onChange={() => setSettings((prev) => ({ ...prev, isShowFps: !prev.isShowFps }))}
-                />} />
+                <Stack direction={'column'} p={3}>
+                    <FormControlLabel label={'Shades'} control={<Checkbox
+                        checked={settings.isShading}
+                        onChange={() => setSettings((prev) => ({ ...prev, isShading: !prev.isShading }))}
+                    />} />
+                    <FormControlLabel label={'Wiggling'} control={<Checkbox
+                        checked={settings.isWiggling}
+                        title='wiggling'
+                        onChange={() => setSettings((prev) => ({ ...prev, isWiggling: !prev.isWiggling }))}
+                    />} />
+                    <FormControlLabel label={'Fps counter'} control={<Checkbox
+                        checked={settings.isShowFps}
+                        title='fps'
+                        onChange={() => setSettings((prev) => ({ ...prev, isShowFps: !prev.isShowFps }))}
+                    />} />
+                </Stack>
+                <Button variant='contained' color='warning' onClick={onConfirm}>START ?GAME?</Button>
             </Stack>
+
             <MapSettings />
         </Stack>
     );

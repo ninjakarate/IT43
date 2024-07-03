@@ -79,41 +79,86 @@ const MapSettings = () => {
         }
     };
 
+    const defineColor = (value: number) => {
+        switch (value) {
+            case 0:
+                return '#fff';
+            case 1:
+                return '#000';
+            case 2:
+                return '#f00';
+            case 3:
+                return '#0f0';
+            case 4:
+                return '#00f';
+            case 5:
+                return '#ff0';
+            case 6:
+                return '#f0f';
+            case 7:
+                return '#0ff';
+            case 8:
+                return '#888';
+            case 9:
+                return '#f88';
+            case 10:
+                return '#8f8';
+            case 11:
+                return '#88f';
+            case 12:
+                return '#ff8';
+            default:
+                return '#fff';
+        }
+    }
+
     return (
         <>
             <Collapse in={expanded} timeout="auto" unmountOnExit>
-                <Stack direction={'row'} mb={2} gap={2}>
-                    <TextBox
-                        fullWidth
-                        label="Rows"
-                        type="number"
-                        value={rows}
-                        onChange={(e) => handleSizeChange(e, 'rows')}
-                    />
-                    <TextBox
-                        fullWidth
-                        label="Cols"
-                        type="number"
-                        value={cols}
-                        onChange={(e) => handleSizeChange(e, 'cols')}
-                    />
-                </Stack>
-                <Stack>
-                    {mapInput.map((row, rowIndex) => (
-                        <div key={rowIndex} style={{ display: 'flex' }}>
-                            {row.map((_, colIndex) => (
-                                <TextBox
-                                    key={colIndex}
-                                    type="number"
-                                    value={mapInput[rowIndex][colIndex]}
-                                    onChange={(e) => handleInputChange(rowIndex, colIndex, e.target.value)}
-                                    style={{ width: 35, margin: 0, borderRadius: 4 }}
-                                />
-                            ))}
-                        </div>
-                    ))}
-                </Stack>
-                <Button onClick={handleConfirm}>Confirm</Button>
+                    <Stack direction={'row'} mb={2} gap={2} flexGrow={1}>
+                        <TextBox
+                            fullWidth
+                            label="Rows"
+                            type="number"
+                            value={rows}
+                            onChange={(e) => handleSizeChange(e, 'rows')}
+                        />
+                        <TextBox
+                            fullWidth
+                            label="Cols"
+                            type="number"
+                            value={cols}
+                            onChange={(e) => handleSizeChange(e, 'cols')}
+                        />
+                    </Stack>
+                    <Stack>
+                        {mapInput.map((row, rowIndex) => (
+                            <div key={rowIndex} style={{ display: 'flex' }}>
+                                {row.map((_, colIndex) => (
+                                    <TextBox
+                                        key={colIndex}
+                                        type="number"
+                                        value={mapInput[rowIndex][colIndex]}
+                                        onChange={(e) => handleInputChange(rowIndex, colIndex, e.target.value)}
+                                        style={{ padding: 0, margin: 0, borderRadius: 4 }}
+                                        sx={{
+                                            bgcolor: defineColor(mapInput[rowIndex][colIndex]),
+                                            '& input': {
+                                                textAlign: 'center',
+                                                padding: 0,
+                                                margin: 0,
+                                                width: 30,
+                                                height: 30,
+                                                color: defineColor(mapInput[rowIndex][colIndex])
+                                            },
+                                        }}
+
+                                    />
+                                ))}
+                            </div>
+                        ))}
+                    </Stack>
+                <Button variant='contained' color='error' onClick={handleConfirm}>Save map</Button>
             </Collapse>
             <Stack direction={'column'} alignItems={'center'}>
                 <ExpandMore
@@ -124,13 +169,14 @@ const MapSettings = () => {
                 >
                     <ExpandMoreIcon />
                     <Typography variant={'h6'} fontFamily={'Orbitron'} letterSpacing={2}>
-                        Map
+                        map editor
                     </Typography>
                 </ExpandMore>
 
 
                 {expanded
                     ? (<Stack mt={5} gap={2}>
+                        <Button variant='contained' color='error' onClick={() => setSettings((prev) => ({ ...prev, map: createMap(10, 10) }))}>Reset map</Button>
                         <Typography variant={'h6'} fontFamily={'Orbitron'} letterSpacing={2}>
                             Map tiles
                         </Typography>
@@ -138,7 +184,9 @@ const MapSettings = () => {
                             <Stack gap={2}>
                                 {Object.entries(tiles).slice(0, Object.entries(tiles).length / 2).map(([key, value]) => (
                                     <Stack direction={'row'} alignItems={'center'} gap={2} justifyContent={'space-between'}>
-                                        <Typography variant={'h6'} fontFamily={'Orbitron'} letterSpacing={2}>
+                                        <Typography sx={{
+                                            bgcolor: defineColor(parseInt(key, 10)),
+                                        }} variant={'h6'} fontFamily={'Orbitron'} letterSpacing={2}>
                                             {key}
                                         </Typography>
                                         <Stack key={key} direction={'row'} gap={2}>
@@ -150,7 +198,9 @@ const MapSettings = () => {
                             <Stack gap={2}>
                                 {Object.entries(tiles).slice(Object.entries(tiles).length / 2, Object.entries(tiles).length - 1).map(([key, value]) => (
                                     <Stack direction={'row'} alignItems={'center'} gap={2} justifyContent={'space-between'}>
-                                        <Typography variant={'h6'} fontFamily={'Orbitron'} letterSpacing={2}>
+                                        <Typography sx={{
+                                            bgcolor: defineColor(parseInt(key, 10)),
+                                        }} variant={'h6'} fontFamily={'Orbitron'} letterSpacing={2}>
                                             {key}
                                         </Typography>
                                         <Stack key={key} direction={'row'} gap={2}>
