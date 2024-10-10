@@ -23,6 +23,7 @@ jobs:
 
     # Сборка проекта для основного домена
     - name: Build project for Main Domain
+      if: github.ref == 'refs/heads/master'
       run: npm run build
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
