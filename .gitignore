@@ -17,6 +17,7 @@ release
 # Build output
 .next
 out/
+tsconfig.tsbuildinfo
 
 # Editor directories and files
 .vscode/*

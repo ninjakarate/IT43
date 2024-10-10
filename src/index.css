@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@tailwind variants;
+
+:root {
+  font-size: 14px;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+
+  --color-primary: #d0d0d0;
+  --color-secondary: #333;
+
+  --left-sidebar-width: 7.5rem;
+
+  --color-brand-light: #319b8b9d;
+  --color-brand-lighten: #2673684d;
+  --color-brand: #1A4C45;
+  --color-brand-darken: #0D2622;
+  --color-brand-dark: #000000;
+
+  --color-bg: #f5f5f5;
+}
+
+.shadow {
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.25);
+}
