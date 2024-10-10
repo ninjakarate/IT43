@@ -10,8 +10,7 @@
     "preview": "vite preview",
     "next-dev": "next dev",
     "next-build": "next build",
-    "next-start": "next start",
-    "export": "next export"
+    "next-start": "next start"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
