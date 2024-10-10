@@ -14,6 +14,10 @@ dist-electron
 release
 *.local
 
+# Build output
+.next
+out/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -24,3 +28,6 @@ release
 *.njsproj
 *.sln
 *.sw?
+
+# Environment variables
+.env.local
