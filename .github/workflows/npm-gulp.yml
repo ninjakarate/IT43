@@ -40,9 +40,9 @@ jobs:
         server-dir: /www/it43.space/
 
     # Сборка проекта для поддомена
-    - name: Build project for Subdomain
+    - name: Build and Export project for Subdomain
       if: github.ref == 'refs/heads/example'
-      run: npm run next-build
+      run: npm run next-build && npm run export
 
     # Деплой на поддомен, если пуш в ветку example
     - name: Deploy files to Server via FTP (Subdomain)
@@ -53,5 +53,5 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         protocol: ftp
-        local-dir: ./out/  # Измените путь, если необходимо
+        local-dir: ./out/ 
         server-dir: /www/example.it43.space/
