@@ -2,7 +2,9 @@ name: Build and Deploy
 
 on:
   push:
-    branches: [ "master" ]
+    branches:
+      - master  # Для основного домена
+      - example  # Для поддомена
 
 jobs:
   build-and-deploy:
@@ -19,12 +21,15 @@ jobs:
     - name: Install dependencies
       run: npm install --force
 
-    - name: Build project
+    # Сборка проекта для основного домена
+    - name: Build project for Main Domain
       run: npm run build
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
-    - name: Deploy files to Server via FTP
+    # Деплой на основной домен, если пуш в ветку master
+    - name: Deploy files to Server via FTP (Main Domain)
+      if: github.ref == 'refs/heads/master'
       uses: SamKirkland/FTP-Deploy-Action@4.2.0
       with:
         server: ${{ secrets.HOST }}
@@ -33,3 +38,20 @@ jobs:
         protocol: ftp
         local-dir: ./dist/
         server-dir: /www/it43.space/
+
+    # Сборка проекта для поддомена
+    - name: Build project for Subdomain
+      if: github.ref == 'refs/heads/example'
+      run: npm run next-build
+
+    # Деплой на поддомен, если пуш в ветку example
+    - name: Deploy files to Server via FTP (Subdomain)
+      if: github.ref == 'refs/heads/example'
+      uses: SamKirkland/FTP-Deploy-Action@4.2.0
+      with:
+        server: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        protocol: ftp
+        local-dir: ./out/  # Измените путь, если необходимо
+        server-dir: /www/example.it43.space/
